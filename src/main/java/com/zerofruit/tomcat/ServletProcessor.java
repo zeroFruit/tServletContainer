@@ -24,9 +24,13 @@ public class ServletProcessor {
         }
 
         Servlet servlet = null;
+        RequestFacade requestFacade = new RequestFacade(request);
+        ResponseFacade responseFacade = new ResponseFacade(response);
         try {
             servlet = (Servlet) myClass.newInstance();
-            servlet.service((ServletRequest) request, (ServletResponse) response);
+            servlet.service(
+                    (ServletRequest) requestFacade,
+                    (ServletResponse) responseFacade);
         } catch (Throwable e) {
             e.printStackTrace();
         }

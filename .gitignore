@@ -2,3 +2,7 @@
 build/
 out/
 .gradle/
+
+*.class
+
+.DS_Store
