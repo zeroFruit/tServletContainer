@@ -9,10 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServer {
-
-    public static final String WEB_ROOT =
-            System.getProperty("user.dir") + File.separator + "webroot";
-
     // shutdown command
     private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 
@@ -51,7 +47,16 @@ public class HttpServer {
                 // create Response object
                 Response response = new Response(outputStream);
                 response.setRequest(request);
-                response.sendStaticResource();
+
+                // check if this is a request for a servlet or a static resource
+                // a request for a servlet begins with "/servlet/"
+                if (request.getUri().startsWith("/servlet")) {
+                    ServletProcessor processor = new ServletProcessor();
+                    processor.process(request, response);
+                } else {
+                    StaticResourceProcessor processor = new StaticResourceProcessor();
+                    processor.process(request, response);
+                }
 
                 // Close the socket
                 socket.close();
